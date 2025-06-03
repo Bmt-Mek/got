@@ -1,0 +1,19 @@
+services:
+  # Angular Frontend - Game of Thrones Character Explorer
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_ENV=production
+      - API_URL=https://anapioficeandfire.com/api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
