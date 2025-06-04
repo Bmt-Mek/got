@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = () => {
     take(1),
     map(isAuthenticated => {
       if (!isAuthenticated) {
-        router.navigate(['/login']);
+        router.navigate(['/']);
         return false;
       }
       return true;
@@ -19,7 +19,7 @@ export const authGuard: CanActivateFn = () => {
   );
 };
 
-export const guestGuard: CanActivateFn = () => {
+export const noSessionGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
