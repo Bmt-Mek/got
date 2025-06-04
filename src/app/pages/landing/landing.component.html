@@ -1,0 +1,172 @@
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title fade-in">
+            Explore the World of
+            <span class="accent-text">Game of Thrones</span>
+          </h1>
+          <p class="hero-description fade-in">
+            Discover characters, houses, and their intricate relationships from
+            George R.R. Martin's epic fantasy series. Build your collection of
+            favorite characters and dive deep into the lore of Westeros and
+            beyond.
+          </p>
+          <div *ngIf="isAuthenticated$ | async" class="hero-actions fade-in">
+            <button
+              mat-raised-button
+              color="primary"
+              size="large"
+              routerLink="/characters"
+              class="cta-button"
+            >
+              <mat-icon>people</mat-icon>
+              Browse Characters
+            </button>
+            <button
+              mat-stroked-button
+              color="primary"
+              size="large"
+              routerLink="/favorites"
+              class="secondary-button"
+            >
+              <mat-icon>favorite</mat-icon>
+              My Favorites
+            </button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="image-placeholder">
+            <mat-icon class="hero-icon">castle</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section section">
+    <div class="container">
+      <h2 class="section-title text-center">Discover & Collect</h2>
+      <div class="features-grid">
+        <mat-card class="feature-card slide-in">
+          <mat-card-header>
+            <div mat-card-avatar class="feature-avatar search-avatar">
+              <mat-icon>search</mat-icon>
+            </div>
+            <mat-card-title>Search & Filter</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              Find characters by name, culture, status, and more with our
+              advanced search and filtering capabilities.
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="feature-card slide-in">
+          <mat-card-header>
+            <div mat-card-avatar class="feature-avatar details-avatar">
+              <mat-icon>info</mat-icon>
+            </div>
+            <mat-card-title>Rich Details</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              Explore comprehensive character information including titles,
+              allegiances, and their role in the series.
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="feature-card slide-in">
+          <mat-card-header>
+            <div mat-card-avatar class="feature-avatar favorites-avatar">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <mat-card-title>Personal Collection</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              Save your favorite characters and build your personal collection
+              to track the characters you love most.
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="feature-card slide-in">
+          <mat-card-header>
+            <div mat-card-avatar class="feature-avatar responsive-avatar">
+              <mat-icon>devices</mat-icon>
+            </div>
+            <mat-card-title>Mobile Friendly</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              Enjoy a seamless experience across all your devices with our
+              responsive, mobile-first design.
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">2000+</div>
+          <div class="stat-label">Characters</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">400+</div>
+          <div class="stat-label">Houses</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">8</div>
+          <div class="stat-label">Seasons</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Books</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Begin Your Journey?</h2>
+        <p>
+          Join thousands of fans exploring the rich world of Game of Thrones
+        </p>
+        <div *ngIf="isAuthenticated$ | async" class="cta-buttons">
+          <button
+            mat-raised-button
+            color="primary"
+            size="large"
+            routerLink="/characters"
+          >
+            <mat-icon>explore</mat-icon>
+            Start Exploring
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
+            size="large"
+            routerLink="/favorites"
+          >
+            <mat-icon>favorite</mat-icon>
+            View Favorites
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

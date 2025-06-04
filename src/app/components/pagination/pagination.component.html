@@ -1,0 +1,79 @@
+<div class="pagination-container" *ngIf="totalPages > 1">
+  <div class="pagination-info">
+    <span class="page-info"> Page {{ currentPage }} of {{ totalPages }} </span>
+    <span class="total-info"> ({{ total }} total characters) </span>
+  </div>
+
+  <div class="pagination-controls">
+    <!-- First page -->
+    <button
+      mat-icon-button
+      [disabled]="currentPage <= 1"
+      (click)="onPageChange(1)"
+      matTooltip="First page"
+      class="hidden-mobile"
+    >
+      <mat-icon>first_page</mat-icon>
+    </button>
+
+    <!-- Previous page -->
+    <button
+      mat-icon-button
+      [disabled]="currentPage <= 1"
+      (click)="onPageChange(currentPage - 1)"
+      matTooltip="Previous page"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- Page numbers -->
+    <div class="page-numbers hidden-mobile">
+      <button
+        *ngFor="let page of visiblePages"
+        mat-button
+        [class.current-page]="page === currentPage"
+        [class.ellipsis]="page === -1"
+        [disabled]="page === -1"
+        (click)="onPageChange(page)"
+      >
+        {{ page === -1 ? '...' : page }}
+      </button>
+    </div>
+
+    <!-- Mobile page selector -->
+    <div class="mobile-page-selector hidden-desktop">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Page</mat-label>
+        <mat-select
+          [value]="currentPage"
+          (selectionChange)="onPageChange($event.value)"
+        >
+          <mat-option *ngFor="let page of allPages" [value]="page">
+            {{ page }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Next page -->
+    <button
+      mat-icon-button
+      [disabled]="currentPage >= totalPages"
+      (click)="onPageChange(currentPage + 1)"
+      matTooltip="Next page"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <!-- Last page -->
+    <button
+      mat-icon-button
+      [disabled]="currentPage >= totalPages"
+      (click)="onPageChange(totalPages)"
+      matTooltip="Last page"
+      class="hidden-mobile"
+    >
+      <mat-icon>last_page</mat-icon>
+    </button>
+  </div>
+</div>

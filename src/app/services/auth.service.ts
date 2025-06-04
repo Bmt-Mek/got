@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../models';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly tokenKey = 'got-auth-token';
@@ -19,23 +19,27 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.backendUrl}/auth/login`, credentials).pipe(
-      tap(response => this.handleAuthSuccess(response)),
-      catchError(error => {
-        console.error('Login error:', error);
-        throw error;
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${environment.backendUrl}/auth/login`, credentials)
+      .pipe(
+        tap(response => this.handleAuthSuccess(response)),
+        catchError(error => {
+          console.error('Login error:', error);
+          throw error;
+        })
+      );
   }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.backendUrl}/auth/register`, userData).pipe(
-      tap(response => this.handleAuthSuccess(response)),
-      catchError(error => {
-        console.error('Registration error:', error);
-        throw error;
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${environment.backendUrl}/auth/register`, userData)
+      .pipe(
+        tap(response => this.handleAuthSuccess(response)),
+        catchError(error => {
+          console.error('Registration error:', error);
+          throw error;
+        })
+      );
   }
 
   logout(): void {
@@ -68,7 +72,7 @@ export class AuthService {
       );
     }
 
-    throw new Error('No authentication token found');
+    return throwError(() => 'No authentication token found');
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -136,7 +140,7 @@ export class AuthService {
   private initializeAuth(): void {
     const token = this.getToken();
     const user = this.getStoredUser();
-    
+
     if (token && user) {
       this.isAuthenticatedSubject.next(true);
       this.currentUserSubject.next(user);

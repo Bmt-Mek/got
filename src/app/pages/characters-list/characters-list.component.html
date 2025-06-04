@@ -1,0 +1,102 @@
+<div class="characters-page">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Game of Thrones Characters</h1>
+      <p class="page-description">
+        Explore the vast collection of characters from the world of Ice and
+        Fire. Search, filter, and add your favorites to build your personal
+        collection.
+      </p>
+    </div>
+
+    <!-- Search Bar -->
+    <app-search-bar
+      [initialSearchParams]="searchParams$ | async"
+      (search)="onSearch($event)"
+      (advancedSearch)="onAdvancedSearch($event)"
+      (clearSearch)="onClearSearch()"
+    ></app-search-bar>
+
+    <!-- Loading State -->
+    <app-loading-spinner
+      *ngIf="isLoading$ | async"
+      message="Loading characters..."
+    ></app-loading-spinner>
+
+    <!-- Error State -->
+    <div *ngIf="error$ | async as error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+
+    <!-- Characters Grid -->
+    <div
+      *ngIf="!(isLoading$ | async) && !(error$ | async)"
+      class="characters-section"
+    >
+      <!-- Results Info -->
+      <div class="results-info" *ngIf="paginationInfo$ | async as pagination">
+        <span *ngIf="pagination.total > 0">
+          Showing {{ (pagination.currentPage - 1) * 10 + 1 }} -
+          {{ Math.min(pagination.currentPage * 10, pagination.total) }}
+          of {{ pagination.total }} characters
+        </span>
+        <span *ngIf="pagination.total === 0">
+          No characters found. Try adjusting your search criteria.
+        </span>
+      </div>
+
+      <!-- Characters Grid -->
+      <div class="characters-grid" *ngIf="characters$ | async as characters">
+        <app-character-card
+          *ngFor="let character of characters; trackBy: trackByCharacterUrl"
+          [character]="character"
+          [isFavorite]="(isCharacterFavorite(character.url) | async) || false"
+          (toggleFavorite)="onToggleFavorite($event)"
+          (cardClick)="onCharacterClick($event)"
+          class="character-card-wrapper"
+        ></app-character-card>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="(characters$ | async)?.length === 0" class="empty-state">
+        <mat-icon>person_search</mat-icon>
+        <h3>No characters found</h3>
+        <p>Try adjusting your search filters or browse all characters.</p>
+        <button mat-raised-button color="primary" (click)="onClearSearch()">
+          <mat-icon>clear</mat-icon>
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        *ngIf="paginationInfo$ | async as pagination"
+        [currentPage]="pagination.currentPage"
+        [totalPages]="pagination.totalPages"
+        [total]="pagination.total"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button
+    mat-fab
+    color="accent"
+    class="favorites-fab"
+    (click)="onGoToFavorites()"
+    [matBadge]="(favoriteCount$ | async) || 0"
+    [matBadgeHidden]="((favoriteCount$ | async) || 0) === 0"
+    matBadgeColor="warn"
+    matTooltip="View Favorites"
+  >
+    <mat-icon>favorite</mat-icon>
+  </button>
+</div>

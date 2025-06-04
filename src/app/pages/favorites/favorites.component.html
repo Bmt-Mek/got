@@ -1,0 +1,140 @@
+<div class="favorites-page">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1>My Favorites</h1>
+          <p class="page-description">
+            Your personal collection of favorite Game of Thrones characters.
+          </p>
+        </div>
+        <div class="header-actions" *ngIf="(favorites$ | async)?.length">
+          <button
+            mat-button
+            color="warn"
+            (click)="onClearAllFavorites()"
+            class="clear-button"
+          >
+            <mat-icon>clear_all</mat-icon>
+            Clear All
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <app-loading-spinner
+      *ngIf="isLoading$ | async"
+      message="Loading your favorites..."
+    ></app-loading-spinner>
+
+    <!-- Error State -->
+    <div *ngIf="error$ | async as error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+
+    <!-- Favorites Content -->
+    <div
+      *ngIf="!(isLoading$ | async) && !(error$ | async)"
+      class="favorites-content"
+    >
+      <!-- Favorites Count -->
+      <div class="favorites-count" *ngIf="(favorites$ | async)?.length">
+        <mat-card class="count-card">
+          <mat-card-content>
+            <div class="count-display">
+              <mat-icon>favorite</mat-icon>
+              <span class="count-number">{{
+                (favorites$ | async)?.length
+              }}</span>
+              <span class="count-label">
+                {{
+                  (favorites$ | async)?.length === 1
+                    ? 'favorite character'
+                    : 'favorite characters'
+                }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Favorites Grid -->
+      <div class="favorites-grid" *ngIf="favorites$ | async as favorites">
+        <app-character-card
+          *ngFor="let character of favorites; trackBy: trackByCharacterUrl"
+          [character]="character"
+          [isFavorite]="true"
+          (toggleFavorite)="onRemoveFromFavorites($event)"
+          (cardClick)="onCharacterClick($event)"
+          class="favorite-card-wrapper"
+        ></app-character-card>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="(favorites$ | async)?.length === 0" class="empty-state">
+        <div class="empty-content">
+          <mat-icon class="empty-icon">favorite_border</mat-icon>
+          <h3>No favorites yet</h3>
+          <p>
+            Start building your collection by exploring characters and adding
+            them to your favorites.
+          </p>
+          <div class="empty-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onGoToCharacters()"
+              class="explore-button"
+            >
+              <mat-icon>explore</mat-icon>
+              Explore Characters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" *ngIf="(favorites$ | async)?.length">
+      <mat-card class="actions-card">
+        <mat-card-content>
+          <h3>Quick Actions</h3>
+          <div class="action-buttons">
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="onExportFavorites()"
+            >
+              <mat-icon>download</mat-icon>
+              Export List
+            </button>
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="onShareFavorites()"
+            >
+              <mat-icon>share</mat-icon>
+              Share Collection
+            </button>
+            <button
+              mat-stroked-button
+              color="accent"
+              (click)="onGoToCharacters()"
+            >
+              <mat-icon>add</mat-icon>
+              Add More
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

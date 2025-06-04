@@ -13,41 +13,9 @@ import { checkAuthStatus } from './store/auth/auth.actions';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HeaderComponent,
-    FooterComponent
-  ],
-  template: `
-    <div class="app-container">
-      <app-header></app-header>
-      
-      <main class="main-content" role="main">
-        <router-outlet></router-outlet>
-      </main>
-      
-      <app-footer></app-footer>
-    </div>
-  `,
-  styles: [`
-    .app-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .main-content {
-      flex: 1;
-      position: relative;
-    }
-    
-    @media (max-width: 768px) {
-      .main-content {
-        padding-top: 1rem;
-      }
-    }
-  `]
+  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   constructor(private store: Store<AppState>) {}

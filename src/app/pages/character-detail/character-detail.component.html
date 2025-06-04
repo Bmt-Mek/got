@@ -1,0 +1,314 @@
+<div class="character-detail-page">
+  <div class="container">
+    <!-- Loading State -->
+    <app-loading-spinner
+      *ngIf="isLoading$ | async"
+      message="Loading character details..."
+    ></app-loading-spinner>
+
+    <!-- Error State -->
+    <div *ngIf="error$ | async as error" class="error-message">
+      <mat-icon>error</mat-icon>
+      <h3>Character not found</h3>
+      <p>{{ error }}</p>
+      <div class="error-actions">
+        <button mat-raised-button color="primary" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Characters
+        </button>
+        <button mat-button (click)="onRetry()">
+          <mat-icon>refresh</mat-icon>
+          Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Character Details -->
+    <div
+      *ngIf="character$ | async as character"
+      class="character-content fade-in"
+    >
+      <!-- Navigation -->
+      <div class="character-nav">
+        <button mat-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Characters
+        </button>
+
+        <button
+          mat-fab
+          [color]="(isFavorite$ | async) ? 'warn' : 'primary'"
+          (click)="onToggleFavorite(character)"
+          [matTooltip]="
+            (isFavorite$ | async) ? 'Remove from favorites' : 'Add to favorites'
+          "
+          class="favorite-fab"
+        >
+          <mat-icon>{{
+            (isFavorite$ | async) ? 'favorite' : 'favorite_border'
+          }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Character Header -->
+      <mat-card class="character-header">
+        <mat-card-header>
+          <div mat-card-avatar class="character-avatar">
+            <mat-icon
+              [class.alive]="isAlive(character)"
+              [class.dead]="!isAlive(character)"
+            >
+              {{ isAlive(character) ? 'person' : 'person_off' }}
+            </mat-icon>
+          </div>
+          <mat-card-title>{{ getDisplayName(character) }}</mat-card-title>
+          <mat-card-subtitle *ngIf="character.culture">{{
+            character.culture
+          }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="status-chips">
+            <mat-chip-set>
+              <mat-chip
+                [class.alive-chip]="isAlive(character)"
+                [class.dead-chip]="!isAlive(character)"
+              >
+                {{ isAlive(character) ? 'Alive' : 'Deceased' }}
+              </mat-chip>
+              <mat-chip *ngIf="character.gender" class="gender-chip">
+                {{ character.gender }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Character Information Grid -->
+      <div class="character-info-grid">
+        <!-- Basic Information -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>info</mat-icon>
+              Basic Information
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-item" *ngIf="character.born">
+              <span class="info-label">Born:</span>
+              <span class="info-value">{{ character.born }}</span>
+            </div>
+            <div class="info-item" *ngIf="character.died">
+              <span class="info-label">Died:</span>
+              <span class="info-value">{{ character.died }}</span>
+            </div>
+            <div class="info-item" *ngIf="character.culture">
+              <span class="info-label">Culture:</span>
+              <span class="info-value">{{ character.culture }}</span>
+            </div>
+            <div class="info-item" *ngIf="character.gender">
+              <span class="info-label">Gender:</span>
+              <span class="info-value">{{ character.gender }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Titles -->
+        <mat-card class="info-card" *ngIf="character.titles?.length">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>military_tech</mat-icon>
+              Titles
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip
+                *ngFor="
+                  let title of getValidItems(character.titles);
+                  trackBy: trackByTitle
+                "
+                class="title-chip"
+                [matTooltip]="title"
+              >
+                {{ title }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Aliases -->
+        <mat-card class="info-card" *ngIf="character.aliases?.length">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>face</mat-icon>
+              Also Known As
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip
+                *ngFor="
+                  let alias of getValidItems(character.aliases);
+                  trackBy: trackByAlias
+                "
+                class="alias-chip"
+                [matTooltip]="alias"
+              >
+                {{ alias }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Family -->
+        <mat-card class="info-card" *ngIf="hasFamilyInfo(character)">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>family_restroom</mat-icon>
+              Family
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-item" *ngIf="character.father">
+              <span class="info-label">Father:</span>
+              <span class="info-value">{{
+                getCharacterNameFromUrl(character.father)
+              }}</span>
+            </div>
+            <div class="info-item" *ngIf="character.mother">
+              <span class="info-label">Mother:</span>
+              <span class="info-value">{{
+                getCharacterNameFromUrl(character.mother)
+              }}</span>
+            </div>
+            <div class="info-item" *ngIf="character.spouse">
+              <span class="info-label">Spouse:</span>
+              <span class="info-value">{{
+                getCharacterNameFromUrl(character.spouse)
+              }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Allegiances -->
+        <mat-card class="info-card" *ngIf="character.allegiances?.length">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>shield</mat-icon>
+              Allegiances
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="allegiances-list">
+              <mat-chip-set>
+                <mat-chip
+                  *ngFor="
+                    let allegiance of character.allegiances.slice(0, 5);
+                    trackBy: trackByAllegiance
+                  "
+                  class="allegiance-chip"
+                >
+                  {{ getHouseNameFromUrl(allegiance) }}
+                </mat-chip>
+              </mat-chip-set>
+              <p *ngIf="character.allegiances.length > 5" class="more-items">
+                +{{ character.allegiances.length - 5 }} more
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- TV Series -->
+        <mat-card class="info-card" *ngIf="character.tvSeries?.length">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>tv</mat-icon>
+              TV Series Appearances
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip
+                *ngFor="
+                  let season of getValidItems(character.tvSeries);
+                  trackBy: trackBySeason
+                "
+                class="tv-chip"
+              >
+                {{ season }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Played By -->
+        <mat-card class="info-card" *ngIf="character.playedBy?.length">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>person</mat-icon>
+              Played By
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-chip-set>
+              <mat-chip
+                *ngFor="
+                  let actor of getValidItems(character.playedBy);
+                  trackBy: trackByActor
+                "
+                class="actor-chip"
+              >
+                {{ actor }}
+              </mat-chip>
+            </mat-chip-set>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Books -->
+        <mat-card
+          class="info-card"
+          *ngIf="character.books?.length || character.povBooks?.length"
+        >
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>book</mat-icon>
+              Book Appearances
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="character.povBooks?.length" class="book-section">
+              <h4>POV Character in:</h4>
+              <mat-chip-set>
+                <mat-chip
+                  *ngFor="
+                    let book of character.povBooks.slice(0, 3);
+                    trackBy: trackByBook
+                  "
+                  class="pov-book-chip"
+                >
+                  {{ getBookNameFromUrl(book) }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+            <div *ngIf="character.books?.length" class="book-section">
+              <h4>Appears in:</h4>
+              <mat-chip-set>
+                <mat-chip
+                  *ngFor="
+                    let book of character.books.slice(0, 3);
+                    trackBy: trackByBook
+                  "
+                  class="book-chip"
+                >
+                  {{ getBookNameFromUrl(book) }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

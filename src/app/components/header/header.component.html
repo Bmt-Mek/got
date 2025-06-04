@@ -1,0 +1,91 @@
+<mat-toolbar color="primary" class="app-header">
+  <div class="container">
+    <div class="header-content">
+      <!-- Logo and Brand -->
+      <div class="brand">
+        <a routerLink="/" class="brand-link">
+          <mat-icon class="brand-icon">castle</mat-icon>
+          <span class="brand-text hidden-mobile">GoT Explorer</span>
+          <span class="brand-text-short hidden-desktop">GoT</span>
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <nav *ngIf="isAuthenticated$ | async" class="nav-links">
+        <a
+          mat-button
+          routerLink="/characters"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          <mat-icon>people</mat-icon>
+          <span class="hidden-mobile">Characters</span>
+        </a>
+
+        <a
+          mat-button
+          routerLink="/favorites"
+          routerLinkActive="active"
+          class="nav-link"
+          [matBadge]="favoritesCount$ | async"
+          [matBadgeHidden]="(favoritesCount$ | async) === 0"
+          matBadgeColor="accent"
+        >
+          <mat-icon>favorite</mat-icon>
+          <span class="hidden-mobile">Favorites</span>
+        </a>
+      </nav>
+
+      <!-- User Menu -->
+      <div class="user-section">
+        <!-- Authenticated User Menu -->
+        <div *ngIf="isAuthenticated$ | async" class="user-menu">
+          <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+            <mat-icon>account_circle</mat-icon>
+            <span class="hidden-mobile">{{ (user$ | async)?.firstName }}</span>
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+
+          <mat-menu #userMenu="matMenu">
+            <div class="user-info">
+              <div class="user-name">
+                {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
+              </div>
+              <div class="user-email">{{ (user$ | async)?.email }}</div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <button mat-menu-item routerLink="/favorites">
+              <mat-icon>favorite</mat-icon>
+              <span>My Favorites</span>
+            </button>
+
+            <button mat-menu-item (click)="onLogout()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </div>
+
+        <!-- Authentication Buttons -->
+        <div *ngIf="!(isAuthenticated$ | async)" class="auth-buttons">
+          <a mat-button routerLink="/login" class="login-button">
+            <mat-icon>login</mat-icon>
+            <span class="hidden-mobile">Login</span>
+          </a>
+
+          <a
+            mat-raised-button
+            color="accent"
+            routerLink="/register"
+            class="register-button"
+          >
+            <mat-icon>person_add</mat-icon>
+            <span class="hidden-mobile">Register</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>

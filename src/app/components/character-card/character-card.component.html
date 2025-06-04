@@ -1,0 +1,92 @@
+<mat-card class="character-card fade-in" (click)="onCardClick()">
+  <mat-card-header>
+    <div mat-card-avatar class="character-avatar">
+      <mat-icon [class.alive]="isAlive" [class.dead]="!isAlive">
+        {{ isAlive ? 'person' : 'person_off' }}
+      </mat-icon>
+    </div>
+    <mat-card-title>{{ displayName }}</mat-card-title>
+    <mat-card-subtitle *ngIf="character.culture">{{
+      character.culture
+    }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Status indicators -->
+    <div class="status-indicators">
+      <mat-chip-set>
+        <mat-chip [class.alive-chip]="isAlive" [class.dead-chip]="!isAlive">
+          {{ isAlive ? 'Alive' : 'Deceased' }}
+        </mat-chip>
+        <mat-chip *ngIf="character.gender" class="gender-chip">
+          {{ character.gender }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Titles -->
+    <div class="character-titles" *ngIf="character.titles?.length">
+      <h4>Titles:</h4>
+      <div class="titles-list">
+        <mat-chip-set>
+          <mat-chip
+            *ngFor="let title of displayTitles; trackBy: trackByTitle"
+            class="title-chip"
+            [matTooltip]="title"
+          >
+            {{ title }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <!-- Aliases -->
+    <div class="character-aliases" *ngIf="character.aliases?.length">
+      <h4>Also known as:</h4>
+      <div class="aliases-list">
+        <mat-chip-set>
+          <mat-chip
+            *ngFor="let alias of displayAliases; trackBy: trackByAlias"
+            class="alias-chip"
+            [matTooltip]="alias"
+          >
+            {{ alias }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <!-- Birth/Death info -->
+    <div class="life-info" *ngIf="character.born || character.died">
+      <div *ngIf="character.born" class="birth-info">
+        <mat-icon>cake</mat-icon>
+        <span>Born: {{ character.born }}</span>
+      </div>
+      <div *ngIf="character.died" class="death-info">
+        <mat-icon>event_busy</mat-icon>
+        <span>Died: {{ character.died }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button
+      mat-icon-button
+      [color]="isFavorite ? 'warn' : 'primary'"
+      (click)="onToggleFavorite($event)"
+      [matTooltip]="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+      class="favorite-button"
+    >
+      <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      color="primary"
+      [routerLink]="['/characters', characterId]"
+      (click)="$event.stopPropagation()"
+    >
+      View Details
+    </button>
+  </mat-card-actions>
+</mat-card>

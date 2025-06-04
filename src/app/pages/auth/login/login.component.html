@@ -1,0 +1,153 @@
+<div class="login-page">
+  <div class="container">
+    <div class="login-container">
+      <mat-card class="login-card">
+        <mat-card-header>
+          <div mat-card-avatar class="login-avatar">
+            <mat-icon>login</mat-icon>
+          </div>
+          <mat-card-title>Welcome Back</mat-card-title>
+          <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()"
+            class="login-form"
+          >
+            <!-- Email Field -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+              />
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                Email is required
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                Please enter a valid email
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Password Field -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hidePassword"
+              >
+                <mat-icon>{{
+                  hidePassword ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="loginForm.get('password')?.hasError('required')"
+              >
+                Password is required
+              </mat-error>
+              <mat-error
+                *ngIf="loginForm.get('password')?.hasError('minlength')"
+              >
+                Password must be at least 6 characters
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Error Message -->
+            <div *ngIf="error$ | async as error" class="error-message">
+              <mat-icon>error</mat-icon>
+              <span>{{ error }}</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="loginForm.invalid || (isLoading$ | async)"
+              class="login-button"
+            >
+              <div class="login-button-label">
+                <mat-spinner
+                  *ngIf="isLoading$ | async"
+                  diameter="20"
+                ></mat-spinner>
+                <mat-icon *ngIf="!(isLoading$ | async)">login</mat-icon>
+                <span>{{
+                  (isLoading$ | async) ? 'Signing in...' : 'Sign In'
+                }}</span>
+              </div>
+            </button>
+          </form>
+
+          <!-- Demo Account Info -->
+          <div class="demo-info">
+            <h4>Demo Account</h4>
+            <p>Use these credentials to test the application:</p>
+            <div class="demo-credentials">
+              <p><strong>Email:</strong> demo&#64;got-explorer.com</p>
+              <p><strong>Password:</strong> demo123</p>
+            </div>
+            <button
+              mat-button
+              color="accent"
+              (click)="fillDemoCredentials()"
+              class="demo-button"
+            >
+              <mat-icon>flash_on</mat-icon>
+              Use Demo Account
+            </button>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <div class="card-actions">
+            <p>Don't have an account?</p>
+            <a mat-button color="primary" routerLink="/register">
+              Create Account
+            </a>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Features Preview -->
+      <div class="features-preview">
+        <h3>What you'll get:</h3>
+        <ul class="features-list">
+          <li>
+            <mat-icon>favorite</mat-icon>
+            Save your favorite characters
+          </li>
+          <li>
+            <mat-icon>sync</mat-icon>
+            Sync across devices
+          </li>
+          <li>
+            <mat-icon>search</mat-icon>
+            Advanced search & filtering
+          </li>
+          <li>
+            <mat-icon>share</mat-icon>
+            Share your collections
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

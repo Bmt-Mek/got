@@ -1,0 +1,91 @@
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .pagination-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.pagination-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+@media (min-width: 768px) {
+  .pagination-info {
+    align-items: flex-start;
+  }
+}
+
+.page-info {
+  font-weight: 500;
+}
+
+.total-info {
+  font-size: 0.75rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0 0.5rem;
+}
+
+.page-numbers button {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.page-numbers button.current-page {
+  background-color: #1976d2;
+  color: white;
+}
+
+.page-numbers button.ellipsis {
+  cursor: default;
+  color: #666;
+}
+
+.mobile-page-selector {
+  margin: 0 0.5rem;
+}
+
+.mobile-page-selector mat-form-field {
+  width: 80px;
+}
+
+:host ::ng-deep .mobile-page-selector .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .hidden-desktop {
+    display: none;
+  }
+}
