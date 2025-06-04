@@ -375,8 +375,7 @@ git push origin feature/new-feature
 ## Bug Reporting
 
 Found a bug or security issue?
-- **GitHub Issues:** https://github.com/username/got-character-explorer/issues
-- **Security Issues:** Email security@got-explorer.com (never share credentials in issues)
+- **GitHub Issues:** https://github.com/Bmt-Mek/got/issues
 
 Please include:
 - Environment details (browser, OS, device)
