@@ -133,7 +133,7 @@ export class FavoritesService {
   private loadFavoritesFromStorage(): Character[] {
     try {
       const stored = localStorage.getItem(this.localStorageKey);
-      return stored ? JSON.parse(stored) : [];
+      return stored ? JSON.parse(stored) as Character[] : [];
     } catch (error) {
       console.error('Error loading favorites from localStorage:', error);
       return [];

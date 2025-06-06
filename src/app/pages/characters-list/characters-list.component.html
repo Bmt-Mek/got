@@ -36,10 +36,7 @@
     </div>
 
     <!-- Characters Grid -->
-    <div
-      *ngIf="!(isLoading$ | async) && !(error$ | async)"
-      class="characters-section"
-    >
+    <div *ngIf="showContent$ | async" class="characters-section">
       <!-- Results Info -->
       <div class="results-info" *ngIf="paginationInfo$ | async as pagination">
         <span *ngIf="pagination.total > 0">

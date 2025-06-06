@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = () => {
     take(1),
     map(isAuthenticated => {
       if (!isAuthenticated) {
-        router.navigate(['/']);
+        void router.navigate(['/']);
         return false;
       }
       return true;
@@ -27,7 +27,7 @@ export const noSessionGuard: CanActivateFn = () => {
     take(1),
     map(isAuthenticated => {
       if (isAuthenticated) {
-        router.navigate(['/characters']);
+        void router.navigate(['/characters']);
         return false;
       }
       return true;

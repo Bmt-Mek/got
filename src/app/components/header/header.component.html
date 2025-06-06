@@ -69,7 +69,7 @@
         </div>
 
         <!-- Authentication Buttons -->
-        <div *ngIf="!(isAuthenticated$ | async)" class="auth-buttons">
+        <div *ngIf="(isAuthenticated$ | async) === false" class="auth-buttons">
           <a mat-button routerLink="/login" class="login-button">
             <mat-icon>login</mat-icon>
             <span class="hidden-mobile">Login</span>

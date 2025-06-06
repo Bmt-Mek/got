@@ -7,10 +7,10 @@ import {
   Validators,
   ReactiveFormsModule,
   AbstractControl,
+  FormControl,
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, merge, Observable, Subject } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -44,28 +44,29 @@ function passwordMatchValidator(
 }
 
 @Component({
-    selector: 'app-register',
-    imports: [
-        CommonModule,
-        RouterModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatCheckboxModule,
-    ],
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.scss']
+  selector: 'app-register',
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+  ],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-  registerForm: FormGroup;
+  registerForm: FormGroup<RegisterForm>;
   hidePassword = true;
   hideConfirmPassword = true;
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
+  showContent$: Observable<boolean>;
 
   private destroy$ = new Subject<void>();
 
@@ -73,27 +74,38 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private store: Store<AppState>
   ) {
-    this.registerForm = this.fb.group(
+    this.registerForm = this.fb.group<RegisterForm>(
       {
-        firstName: ['', [Validators.required, Validators.minLength(2)]],
-        lastName: ['', [Validators.required, Validators.minLength(2)]],
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)/),
-          ],
-        ],
-        confirmPassword: ['', [Validators.required]],
-        acceptTerms: [false, [Validators.requiredTrue]],
+        firstName: this.fb.nonNullable.control('', [
+          Validators.required,
+          Validators.minLength(2),
+        ]),
+        lastName: this.fb.nonNullable.control('', [
+          Validators.required,
+          Validators.minLength(2),
+        ]),
+        email: this.fb.nonNullable.control('', [
+          Validators.required,
+          Validators.email,
+        ]),
+        password: this.fb.nonNullable.control('', [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)/),
+        ]),
+        confirmPassword: this.fb.nonNullable.control('', [Validators.required]),
+        acceptTerms: this.fb.nonNullable.control(false, [
+          Validators.requiredTrue,
+        ]),
       },
       { validators: passwordMatchValidator }
     );
 
     this.isLoading$ = this.store.select(selectAuthLoading);
     this.error$ = this.store.select(selectAuthError);
+    this.showContent$ = merge(this.isLoading$, this.error$).pipe(
+      map(res => !!!res)
+    );
   }
 
   ngOnInit(): void {
@@ -109,10 +121,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.registerForm.valid) {
       const userData: RegisterRequest = {
-        firstName: this.registerForm.value.firstName,
-        lastName: this.registerForm.value.lastName,
-        email: this.registerForm.value.email,
-        password: this.registerForm.value.password,
+        firstName: this.registerForm.value.firstName!,
+        lastName: this.registerForm.value.lastName!,
+        email: this.registerForm.value.email!,
+        password: this.registerForm.value.password!,
       };
       this.store.dispatch(register({ userData }));
     }
@@ -125,4 +137,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
   toggleConfirmPasswordVisibility(): void {
     this.hideConfirmPassword = !this.hideConfirmPassword;
   }
+}
+
+export interface RegisterForm {
+  firstName: FormControl<string>;
+  lastName: FormControl<string>;
+  email: FormControl<string>;
+  password: FormControl<string>;
+  confirmPassword: FormControl<string>;
+  acceptTerms: FormControl<boolean>;
 }

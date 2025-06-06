@@ -20,9 +20,13 @@ export class AuthEffects {
       switchMap(({ credentials }) =>
         this.authService.login(credentials).pipe(
           map(authResponse => AuthActions.loginSuccess({ authResponse })),
-          catchError(error => of(AuthActions.loginFailure({
-            error: error.message || 'Login failed'
-          })))
+          catchError((error: { message: string }) =>
+            of(
+              AuthActions.loginFailure({
+                error: error.message || 'Login failed',
+              })
+            )
+          )
         )
       )
     )
@@ -34,21 +38,26 @@ export class AuthEffects {
       switchMap(({ userData }) =>
         this.authService.register(userData).pipe(
           map(authResponse => AuthActions.registerSuccess({ authResponse })),
-          catchError(error => of(AuthActions.registerFailure({
-            error: error.message || 'Registration failed'
-          })))
+          catchError((error: { message: string }) =>
+            of(
+              AuthActions.registerFailure({
+                error: error.message || 'Registration failed',
+              })
+            )
+          )
         )
       )
     )
   );
 
-  loginSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),
-      tap(() => {
-        this.router.navigate(['/characters']);
-      })
-    ),
+  loginSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),
+        tap(() => {
+          void this.router.navigate(['/characters']);
+        })
+      ),
     { dispatch: false }
   );
 
@@ -57,7 +66,7 @@ export class AuthEffects {
       ofType(AuthActions.logout),
       tap(() => {
         this.authService.logout();
-        this.router.navigate(['/']);
+        void this.router.navigate(['/']);
       }),
       map(() => AuthActions.logoutSuccess())
     )

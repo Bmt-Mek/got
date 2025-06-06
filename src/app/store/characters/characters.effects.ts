@@ -22,7 +22,7 @@ export class CharactersEffects {
             total: response.total,
             page: response.page
           })),
-          catchError(error => of(CharactersActions.loadCharactersFailure({
+          catchError((error: { message: string }) => of(CharactersActions.loadCharactersFailure({
             error: error.message || 'Failed to load characters'
           })))
         )
@@ -36,7 +36,7 @@ export class CharactersEffects {
       switchMap(({ id }) =>
         this.charactersService.getCharacterById(id).pipe(
           map(character => CharactersActions.loadCharacterByIdSuccess({ character })),
-          catchError(error => of(CharactersActions.loadCharacterByIdFailure({
+          catchError((error: { message: string }) => of(CharactersActions.loadCharacterByIdFailure({
             error: error.message || 'Failed to load character'
           })))
         )
@@ -55,7 +55,7 @@ export class CharactersEffects {
             total: response.total,
             page: 1
           })),
-          catchError(error => of(CharactersActions.loadCharactersFailure({
+          catchError((error: { message: string }) => of(CharactersActions.loadCharactersFailure({
             error: error.message || 'Failed to search characters'
           })))
         )

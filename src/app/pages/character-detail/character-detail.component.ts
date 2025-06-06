@@ -9,8 +9,6 @@ import {
   filter,
   take,
   debounceTime,
-  startWith,
-  catchError,
 } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,20 +36,20 @@ import { CharactersService } from '../../services';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 
 @Component({
-    selector: 'app-character-detail',
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatChipsModule,
-        MatDividerModule,
-        MatSnackBarModule,
-        MatTooltipModule,
-        LoadingSpinnerComponent,
-    ],
-    templateUrl: './character-detail.component.html',
-    styleUrls: ['./character-detail.component.scss']
+  selector: 'app-character-detail',
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    LoadingSpinnerComponent,
+  ],
+  templateUrl: './character-detail.component.html',
+  styleUrls: ['./character-detail.component.scss'],
 })
 export class CharacterDetailComponent implements OnInit, OnDestroy {
   character$: Observable<Character | null>;
@@ -76,14 +74,14 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
     this.isFavorite$ = this.character$.pipe(
       filter(character => !!character),
       switchMap(character =>
-        this.store.select(selectIsFavorite(character!.url))
+        this.store.select(selectIsFavorite(character.url))
       )
     );
   }
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      this.characterId = params['id'];
+      this.characterId = params['id'] as string;
       if (this.characterId) {
         this.store.dispatch(loadCharacterById({ id: this.characterId }));
       }
@@ -168,7 +166,7 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/characters']);
+    void this.router.navigate(['/characters']);
   }
 
   getDisplayName(character: Character): string {

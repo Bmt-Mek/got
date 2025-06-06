@@ -41,10 +41,7 @@
     </div>
 
     <!-- Favorites Content -->
-    <div
-      *ngIf="!(isLoading$ | async) && !(error$ | async)"
-      class="favorites-content"
-    >
+    <div *ngIf="showContent$ | async" class="favorites-content">
       <!-- Favorites Count -->
       <div class="favorites-count" *ngIf="(favorites$ | async)?.length">
         <mat-card class="count-card">

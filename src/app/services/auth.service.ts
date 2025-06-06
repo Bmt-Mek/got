@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../models';
 import { environment } from '../../environments/environment';
 
@@ -122,7 +122,7 @@ export class AuthService {
   private getStoredUser(): User | null {
     try {
       const stored = localStorage.getItem(this.userKey);
-      return stored ? JSON.parse(stored) : null;
+      return stored ? (JSON.parse(stored) as User) : null;
     } catch (error) {
       console.error('Error retrieving stored user:', error);
       return null;
@@ -148,17 +148,17 @@ export class AuthService {
   }
 
   // Check if token is expired (basic implementation)
-  isTokenExpired(): boolean {
-    const token = this.getToken();
-    if (!token) return true;
+  // isTokenExpired(): boolean {
+  //   const token = this.getToken();
+  //   if (!token) return true;
 
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-      return payload.exp < currentTime;
-    } catch (error) {
-      console.error('Error checking token expiration:', error);
-      return true;
-    }
-  }
+  //   try {
+  //     const payload = JSON.parse(atob(token.split('.')[1]));
+  //     const currentTime = Math.floor(Date.now() / 1000);
+  //     return payload.exp < currentTime;
+  //   } catch (error) {
+  //     console.error('Error checking token expiration:', error);
+  //     return true;
+  //   }
+  // }
 }

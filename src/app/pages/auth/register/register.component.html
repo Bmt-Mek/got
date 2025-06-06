@@ -196,7 +196,7 @@
                   *ngIf="isLoading$ | async"
                   diameter="20"
                 ></mat-spinner>
-                <mat-icon *ngIf="!(isLoading$ | async)">person_add</mat-icon>
+                <mat-icon *ngIf="showContent$ | async">person_add</mat-icon>
                 <span>{{
                   (isLoading$ | async)
                     ? 'Creating account...'

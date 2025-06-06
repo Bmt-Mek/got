@@ -20,7 +20,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         switch (error.status) {
           case 401:
             errorMessage = 'Authentication required';
-            router.navigate(['/login']);
+            void router.navigate(['/login']);
             break;
           case 403:
             errorMessage = 'Access forbidden';
@@ -32,14 +32,14 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             errorMessage = 'Internal server error';
             break;
           default:
-            errorMessage = error.error?.message || `Error Code: ${error.status}`;
+            errorMessage = `Error Code: ${error.status}`;
         }
       }
 
       // Show error message to user
       snackBar.open(errorMessage, 'Close', {
         duration: 5000,
-        panelClass: ['error-snackbar']
+        panelClass: ['error-snackbar'],
       });
 
       return throwError(() => new Error(errorMessage));

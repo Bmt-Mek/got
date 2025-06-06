@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { takeUntil, map, take } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -41,29 +41,36 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
-    selector: 'app-characters-list',
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSnackBarModule,
-        MatBadgeModule,
-        MatTooltipModule,
-        LoadingSpinnerComponent,
-        CharacterCardComponent,
-        SearchBarComponent,
-        PaginationComponent,
-    ],
-    templateUrl: './characters-list.component.html',
-    styleUrls: ['./characters-list.component.scss']
+  selector: 'app-characters-list',
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatBadgeModule,
+    MatTooltipModule,
+    LoadingSpinnerComponent,
+    CharacterCardComponent,
+    SearchBarComponent,
+    PaginationComponent,
+  ],
+  templateUrl: './characters-list.component.html',
+  styleUrls: ['./characters-list.component.scss'],
 })
 export class CharactersListComponent implements OnInit, OnDestroy {
   characters$: Observable<Character[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
   searchParams$: Observable<CharacterSearchParams | null>;
-  paginationInfo$: Observable<any>;
+  paginationInfo$: Observable<{
+    currentPage: number;
+    totalPages: number;
+    total: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  }>;
   favoriteCount$: Observable<number>;
+  showContent$: Observable<boolean>;
 
   private destroy$ = new Subject<void>();
 
@@ -77,6 +84,9 @@ export class CharactersListComponent implements OnInit, OnDestroy {
     this.error$ = this.store.select(selectCharactersError);
     this.searchParams$ = this.store.select(selectSearchParams);
     this.paginationInfo$ = this.store.select(selectPaginationInfo);
+    this.showContent$ = merge(this.isLoading$, this.error$).pipe(
+      map(res => !!!res)
+    );
 
     this.favoriteCount$ = this.store
       .select(selectFavorites)
@@ -167,11 +177,11 @@ export class CharactersListComponent implements OnInit, OnDestroy {
 
   onCharacterClick(character: Character): void {
     const characterId = this.extractCharacterIdFromUrl(character.url);
-    this.router.navigate(['/characters', characterId]);
+    void this.router.navigate(['/characters', characterId]);
   }
 
   onGoToFavorites(): void {
-    this.router.navigate(['/favorites']);
+    void this.router.navigate(['/favorites']);
   }
 
   onRetry(): void {

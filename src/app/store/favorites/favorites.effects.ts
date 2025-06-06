@@ -17,10 +17,16 @@ export class FavoritesEffects {
       ofType(FavoritesActions.loadFavorites),
       switchMap(() =>
         this.favoritesService.getFavorites().pipe(
-          map(favorites => FavoritesActions.loadFavoritesSuccess({ favorites })),
-          catchError(error => of(FavoritesActions.loadFavoritesFailure({
-            error: error.message || 'Failed to load favorites'
-          })))
+          map(favorites =>
+            FavoritesActions.loadFavoritesSuccess({ favorites })
+          ),
+          catchError((error: { message: string }) =>
+            of(
+              FavoritesActions.loadFavoritesFailure({
+                error: error.message || 'Failed to load favorites',
+              })
+            )
+          )
         )
       )
     )
@@ -32,16 +38,20 @@ export class FavoritesEffects {
       tap(action => console.log('AddToFavorites effect triggered:', action)),
       switchMap(({ character }) =>
         this.favoritesService.addToFavorites(character).pipe(
-          tap(() => console.log('Add to favorites service completed successfully')),
+          tap(() =>
+            console.log('Add to favorites service completed successfully')
+          ),
           map(() => {
             console.log('Dispatching addToFavoritesSuccess');
             return FavoritesActions.addToFavoritesSuccess({ character });
           }),
-          catchError(error => {
+          catchError((error: { message: string }) => {
             console.error('Add to favorites service error:', error);
-            return of(FavoritesActions.addToFavoritesFailure({
-              error: error.message || 'Failed to add to favorites'
-            }));
+            return of(
+              FavoritesActions.addToFavoritesFailure({
+                error: error.message || 'Failed to add to favorites',
+              })
+            );
           })
         )
       )
@@ -53,10 +63,16 @@ export class FavoritesEffects {
       ofType(FavoritesActions.removeFromFavorites),
       switchMap(({ characterUrl }) =>
         this.favoritesService.removeFromFavorites(characterUrl).pipe(
-          map(() => FavoritesActions.removeFromFavoritesSuccess({ characterUrl })),
-          catchError(error => of(FavoritesActions.removeFromFavoritesFailure({
-            error: error.message || 'Failed to remove from favorites'
-          })))
+          map(() =>
+            FavoritesActions.removeFromFavoritesSuccess({ characterUrl })
+          ),
+          catchError((error: { message: string }) =>
+            of(
+              FavoritesActions.removeFromFavoritesFailure({
+                error: error.message || 'Failed to remove from favorites',
+              })
+            )
+          )
         )
       )
     )

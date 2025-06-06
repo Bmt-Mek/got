@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { merge, Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -46,6 +46,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
   favorites$: Observable<Character[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<string | null>;
+  showContent$: Observable<boolean>;
 
   private destroy$ = new Subject<void>();
 
@@ -58,6 +59,9 @@ export class FavoritesComponent implements OnInit, OnDestroy {
     this.favorites$ = this.store.select(selectFavorites);
     this.isLoading$ = this.store.select(selectFavoritesLoading);
     this.error$ = this.store.select(selectFavoritesError);
+    this.showContent$ = merge(this.isLoading$, this.error$).pipe(
+      map(res => !!!res)
+    );
   }
 
   ngOnInit(): void {
@@ -119,11 +123,11 @@ export class FavoritesComponent implements OnInit, OnDestroy {
 
   onCharacterClick(character: Character): void {
     const characterId = this.extractCharacterIdFromUrl(character.url);
-    this.router.navigate(['/characters', characterId]);
+    void this.router.navigate(['/characters', characterId]);
   }
 
   onGoToCharacters(): void {
-    this.router.navigate(['/characters']);
+    void this.router.navigate(['/characters']);
   }
 
   onRetry(): void {

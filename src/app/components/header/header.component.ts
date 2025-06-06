@@ -17,26 +17,27 @@ import {
   selectUser,
 } from '../../store/auth/auth.selectors';
 import { logout } from '../../store/auth/auth.actions';
+import { User } from '@app/models/auth.model';
 
 @Component({
-    selector: 'app-header',
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatBadgeModule,
-        MatMenuModule,
-        MatDividerModule,
-    ],
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+  selector: 'app-header',
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatBadgeModule,
+    MatMenuModule,
+    MatDividerModule,
+  ],
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
   favoritesCount$: Observable<number>;
   isAuthenticated$: Observable<boolean>;
-  user$: Observable<any>;
+  user$: Observable<User | null>;
 
   constructor(private store: Store<AppState>) {
     this.favoritesCount$ = this.store.select(selectFavoritesCount);

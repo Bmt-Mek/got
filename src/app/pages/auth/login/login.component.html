@@ -88,7 +88,7 @@
                   *ngIf="isLoading$ | async"
                   diameter="20"
                 ></mat-spinner>
-                <mat-icon *ngIf="!(isLoading$ | async)">login</mat-icon>
+                <mat-icon *ngIf="(showContent$ | async)">login</mat-icon>
                 <span>{{
                   (isLoading$ | async) ? 'Signing in...' : 'Sign In'
                 }}</span>

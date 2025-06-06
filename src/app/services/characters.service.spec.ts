@@ -170,7 +170,7 @@ describe('CharactersService', () => {
     });
 
     it('should check if character is alive', () => {
-      let character = { ...mockCharacter };
+      const character = { ...mockCharacter };
       expect(service.isCharacterAlive(character)).toBe(true);
 
       character.died = 'In 300 AC';

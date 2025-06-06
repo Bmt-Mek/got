@@ -1,7 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CharactersState } from './characters.reducer';
 
-export const selectCharactersState = createFeatureSelector<CharactersState>('characters');
+export const selectCharactersState =
+  createFeatureSelector<CharactersState>('characters');
 
 export const selectCharacters = createSelector(
   selectCharactersState,
@@ -50,6 +51,6 @@ export const selectPaginationInfo = createSelector(
     totalPages: state.totalPages,
     total: state.total,
     hasNext: state.currentPage < state.totalPages,
-    hasPrev: state.currentPage > 1
+    hasPrev: state.currentPage > 1,
   })
 );
