@@ -6,6 +6,8 @@
 
 A modern, responsive Single Page Application (SPA) built with Angular that allows users to explore Game of Thrones characters, houses, and manage their personal favorites collection. Features include advanced search, mobile-first design, authentication, and real-time data from the Ice and Fire API.
 
+[![Live Demo](https://img.shields.io/badge/Demo-Live-blue?style=for-the-badge)](https://bmt-mek.github.io/got/)
+
 ## Quick Start
 
 1. **Clone the repository:**
