@@ -17,14 +17,20 @@ export class CharactersEffects {
       ofType(CharactersActions.loadCharacters),
       switchMap(({ page = 1, searchParams }) =>
         this.charactersService.getCharacters(page, searchParams).pipe(
-          map(response => CharactersActions.loadCharactersSuccess({
-            characters: response.data,
-            total: response.total,
-            page: response.page
-          })),
-          catchError((error: { message: string }) => of(CharactersActions.loadCharactersFailure({
-            error: error.message || 'Failed to load characters'
-          })))
+          map(response =>
+            CharactersActions.loadCharactersSuccess({
+              characters: response.data,
+              total: response.total,
+              page: response.page,
+            })
+          ),
+          catchError((error: { message: string }) =>
+            of(
+              CharactersActions.loadCharactersFailure({
+                error: error.message || 'Failed to load characters',
+              })
+            )
+          )
         )
       )
     )
@@ -35,10 +41,16 @@ export class CharactersEffects {
       ofType(CharactersActions.loadCharacterById),
       switchMap(({ id }) =>
         this.charactersService.getCharacterById(id).pipe(
-          map(character => CharactersActions.loadCharacterByIdSuccess({ character })),
-          catchError((error: { message: string }) => of(CharactersActions.loadCharacterByIdFailure({
-            error: error.message || 'Failed to load character'
-          })))
+          map(character =>
+            CharactersActions.loadCharacterByIdSuccess({ character })
+          ),
+          catchError((error: { message: string }) =>
+            of(
+              CharactersActions.loadCharacterByIdFailure({
+                error: error.message || 'Failed to load character',
+              })
+            )
+          )
         )
       )
     )
@@ -50,14 +62,20 @@ export class CharactersEffects {
       debounceTime(300),
       switchMap(({ searchTerm }) =>
         this.charactersService.searchCharacters(searchTerm).pipe(
-          map(response => CharactersActions.loadCharactersSuccess({
-            characters: response.data,
-            total: response.total,
-            page: 1
-          })),
-          catchError((error: { message: string }) => of(CharactersActions.loadCharactersFailure({
-            error: error.message || 'Failed to search characters'
-          })))
+          map(response =>
+            CharactersActions.loadCharactersSuccess({
+              characters: response.data,
+              total: response.total,
+              page: 1,
+            })
+          ),
+          catchError((error: { message: string }) =>
+            of(
+              CharactersActions.loadCharactersFailure({
+                error: error.message || 'Failed to search characters',
+              })
+            )
+          )
         )
       )
     )

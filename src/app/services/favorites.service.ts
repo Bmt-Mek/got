@@ -6,7 +6,7 @@ import { Character } from '../models';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FavoritesService {
   private readonly localStorageKey = 'got-favorites';
@@ -19,30 +19,34 @@ export class FavoritesService {
 
   getFavorites(): Observable<Character[]> {
     if (this.useBackend) {
-      return this.http.get<Character[]>(`${environment.backendUrl}/favorites`).pipe(
-        tap(favorites => this.favoritesSubject.next(favorites)),
-        catchError(error => {
-          console.error('Error fetching favorites from backend:', error);
-          return this.getFavoritesFromStorage();
-        })
-      );
+      return this.http
+        .get<Character[]>(`${environment.backendUrl}/favorites`)
+        .pipe(
+          tap(favorites => this.favoritesSubject.next(favorites)),
+          catchError(error => {
+            console.error('Error fetching favorites from backend:', error);
+            return this.getFavoritesFromStorage();
+          })
+        );
     }
-    
+
     return this.getFavoritesFromStorage();
   }
 
   addToFavorites(character: Character): Observable<void> {
     if (this.useBackend) {
-      return this.http.post<void>(`${environment.backendUrl}/favorites`, character).pipe(
-        tap(() => {
-          const currentFavorites = this.favoritesSubject.value;
-          this.favoritesSubject.next([...currentFavorites, character]);
-        }),
-        catchError(error => {
-          console.error('Error adding to favorites on backend:', error);
-          return this.addToFavoritesLocally(character);
-        })
-      );
+      return this.http
+        .post<void>(`${environment.backendUrl}/favorites`, character)
+        .pipe(
+          tap(() => {
+            const currentFavorites = this.favoritesSubject.value;
+            this.favoritesSubject.next([...currentFavorites, character]);
+          }),
+          catchError(error => {
+            console.error('Error adding to favorites on backend:', error);
+            return this.addToFavoritesLocally(character);
+          })
+        );
     }
 
     return this.addToFavoritesLocally(character);
@@ -50,26 +54,34 @@ export class FavoritesService {
 
   removeFromFavorites(characterUrl: string): Observable<void> {
     if (this.useBackend) {
-      return this.http.delete<void>(`${environment.backendUrl}/favorites/${encodeURIComponent(characterUrl)}`).pipe(
-        tap(() => {
-          const currentFavorites = this.favoritesSubject.value;
-          const updatedFavorites = currentFavorites.filter(char => char.url !== characterUrl);
-          this.favoritesSubject.next(updatedFavorites);
-        }),
-        catchError(error => {
-          console.error('Error removing from favorites on backend:', error);
-          return this.removeFromFavoritesLocally(characterUrl);
-        })
-      );
+      return this.http
+        .delete<void>(
+          `${environment.backendUrl}/favorites/${encodeURIComponent(characterUrl)}`
+        )
+        .pipe(
+          tap(() => {
+            const currentFavorites = this.favoritesSubject.value;
+            const updatedFavorites = currentFavorites.filter(
+              char => char.url !== characterUrl
+            );
+            this.favoritesSubject.next(updatedFavorites);
+          }),
+          catchError(error => {
+            console.error('Error removing from favorites on backend:', error);
+            return this.removeFromFavoritesLocally(characterUrl);
+          })
+        );
     }
 
     return this.removeFromFavoritesLocally(characterUrl);
   }
 
   isFavorite(characterUrl: string): Observable<boolean> {
-    return this.favoritesSubject.asObservable().pipe(
-      map(favorites => favorites.some(char => char.url === characterUrl))
-    );
+    return this.favoritesSubject
+      .asObservable()
+      .pipe(
+        map(favorites => favorites.some(char => char.url === characterUrl))
+      );
   }
 
   clearFavorites(): Observable<void> {
@@ -105,20 +117,24 @@ export class FavoritesService {
 
   private addToFavoritesLocally(character: Character): Observable<void> {
     const currentFavorites = this.loadFavoritesFromStorage();
-    const isAlreadyFavorite = currentFavorites.some(char => char.url === character.url);
-    
+    const isAlreadyFavorite = currentFavorites.some(
+      char => char.url === character.url
+    );
+
     if (!isAlreadyFavorite) {
       const updatedFavorites = [...currentFavorites, character];
       this.saveFavoritesToStorage(updatedFavorites);
       this.favoritesSubject.next(updatedFavorites);
     }
-    
+
     return of(void 0);
   }
 
   private removeFromFavoritesLocally(characterUrl: string): Observable<void> {
     const currentFavorites = this.loadFavoritesFromStorage();
-    const updatedFavorites = currentFavorites.filter(char => char.url !== characterUrl);
+    const updatedFavorites = currentFavorites.filter(
+      char => char.url !== characterUrl
+    );
     this.saveFavoritesToStorage(updatedFavorites);
     this.favoritesSubject.next(updatedFavorites);
     return of(void 0);
@@ -133,7 +149,7 @@ export class FavoritesService {
   private loadFavoritesFromStorage(): Character[] {
     try {
       const stored = localStorage.getItem(this.localStorageKey);
-      return stored ? JSON.parse(stored) as Character[] : [];
+      return stored ? (JSON.parse(stored) as Character[]) : [];
     } catch (error) {
       console.error('Error loading favorites from localStorage:', error);
       return [];

@@ -23,7 +23,7 @@ describe('CharacterCardComponent', () => {
     culture: 'Northmen',
     born: 'In 283 AC',
     died: '',
-    titles: ['Lord Commander of the Night\'s Watch', 'King in the North'],
+    titles: ["Lord Commander of the Night's Watch", 'King in the North'],
     aliases: ['Lord Snow', 'The Bastard of Winterfell'],
     father: '',
     mother: '',
@@ -32,14 +32,14 @@ describe('CharacterCardComponent', () => {
     books: [],
     povBooks: ['https://anapioficeandfire.com/api/books/1'],
     tvSeries: ['Season 1', 'Season 2'],
-    playedBy: ['Kit Harington']
+    playedBy: ['Kit Harington'],
   };
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('CharactersService', [
       'getCharacterDisplayName',
       'isCharacterAlive',
-      'extractCharacterIdFromUrl'
+      'extractCharacterIdFromUrl',
     ]);
 
     await TestBed.configureTestingModule({
@@ -51,16 +51,16 @@ describe('CharacterCardComponent', () => {
         MatChipsModule,
         MatTooltipModule,
         RouterTestingModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
       ],
-      providers: [
-        { provide: CharactersService, useValue: spy }
-      ]
+      providers: [{ provide: CharactersService, useValue: spy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CharacterCardComponent);
     component = fixture.componentInstance;
-    charactersService = TestBed.inject(CharactersService) as jasmine.SpyObj<CharactersService>;
+    charactersService = TestBed.inject(
+      CharactersService
+    ) as jasmine.SpyObj<CharactersService>;
 
     // Set up spy return values
     charactersService.getCharacterDisplayName.and.returnValue('Jon Snow');
@@ -77,8 +77,12 @@ describe('CharacterCardComponent', () => {
 
   it('should display character information', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('mat-card-title').textContent).toContain('Jon Snow');
-    expect(compiled.querySelector('mat-card-subtitle').textContent).toContain('Northmen');
+    expect(compiled.querySelector('mat-card-title').textContent).toContain(
+      'Jon Snow'
+    );
+    expect(compiled.querySelector('mat-card-subtitle').textContent).toContain(
+      'Northmen'
+    );
   });
 
   it('should display character status as alive', () => {
@@ -113,7 +117,8 @@ describe('CharacterCardComponent', () => {
   it('should emit toggleFavorite when favorite button is clicked', () => {
     spyOn(component.toggleFavorite, 'emit');
 
-    const favoriteButton = fixture.nativeElement.querySelector('.favorite-button');
+    const favoriteButton =
+      fixture.nativeElement.querySelector('.favorite-button');
     favoriteButton.click();
 
     expect(component.toggleFavorite.emit).toHaveBeenCalledWith(mockCharacter);
@@ -132,7 +137,9 @@ describe('CharacterCardComponent', () => {
     component.isFavorite = true;
     fixture.detectChanges();
 
-    const favoriteIcon = fixture.nativeElement.querySelector('.favorite-button mat-icon');
+    const favoriteIcon = fixture.nativeElement.querySelector(
+      '.favorite-button mat-icon'
+    );
     expect(favoriteIcon.textContent.trim()).toBe('favorite');
   });
 
@@ -140,7 +147,9 @@ describe('CharacterCardComponent', () => {
     component.isFavorite = false;
     fixture.detectChanges();
 
-    const favoriteIcon = fixture.nativeElement.querySelector('.favorite-button mat-icon');
+    const favoriteIcon = fixture.nativeElement.querySelector(
+      '.favorite-button mat-icon'
+    );
     expect(favoriteIcon.textContent.trim()).toBe('favorite_border');
   });
 
@@ -157,12 +166,17 @@ describe('CharacterCardComponent', () => {
     component.character = characterWithoutName;
     fixture.detectChanges();
 
-    expect(charactersService.getCharacterDisplayName).toHaveBeenCalledWith(characterWithoutName);
+    expect(charactersService.getCharacterDisplayName).toHaveBeenCalledWith(
+      characterWithoutName
+    );
   });
 
   it('should get display titles correctly', () => {
     const displayTitles = component.displayTitles;
-    expect(displayTitles).toEqual(['Lord Commander of the Night\'s Watch', 'King in the North']);
+    expect(displayTitles).toEqual([
+      "Lord Commander of the Night's Watch",
+      'King in the North',
+    ]);
   });
 
   it('should get display aliases correctly', () => {
@@ -173,10 +187,10 @@ describe('CharacterCardComponent', () => {
   it('should limit displayed titles to 3', () => {
     const characterWithManyTitles = {
       ...mockCharacter,
-      titles: ['Title 1', 'Title 2', 'Title 3', 'Title 4', 'Title 5']
+      titles: ['Title 1', 'Title 2', 'Title 3', 'Title 4', 'Title 5'],
     };
     component.character = characterWithManyTitles;
-    
+
     const displayTitles = component.displayTitles;
     expect(displayTitles.length).toBe(3);
   });
@@ -184,10 +198,10 @@ describe('CharacterCardComponent', () => {
   it('should limit displayed aliases to 2', () => {
     const characterWithManyAliases = {
       ...mockCharacter,
-      aliases: ['Alias 1', 'Alias 2', 'Alias 3', 'Alias 4']
+      aliases: ['Alias 1', 'Alias 2', 'Alias 3', 'Alias 4'],
     };
     component.character = characterWithManyAliases;
-    
+
     const displayAliases = component.displayAliases;
     expect(displayAliases.length).toBe(2);
   });
@@ -196,13 +210,13 @@ describe('CharacterCardComponent', () => {
     const characterWithEmptyData = {
       ...mockCharacter,
       titles: ['Valid Title', '', '   ', 'Another Title'],
-      aliases: ['Valid Alias', '', '   ']
+      aliases: ['Valid Alias', '', '   '],
     };
     component.character = characterWithEmptyData;
-    
+
     const displayTitles = component.displayTitles;
     const displayAliases = component.displayAliases;
-    
+
     expect(displayTitles).toEqual(['Valid Title', 'Another Title']);
     expect(displayAliases).toEqual(['Valid Alias']);
   });
@@ -220,17 +234,18 @@ describe('CharacterCardComponent', () => {
   });
 
   it('should prevent event propagation when favorite button is clicked', () => {
-    const favoriteButton = fixture.nativeElement.querySelector('.favorite-button');
+    const favoriteButton =
+      fixture.nativeElement.querySelector('.favorite-button');
     const clickEvent = new Event('click');
     spyOn(clickEvent, 'stopPropagation');
-    
+
     favoriteButton.dispatchEvent(clickEvent);
-    
+
     // This is testing the implementation, but the actual stopPropagation is called in the template
     // We'll verify through behavior - that cardClick is not emitted when favorite button is clicked
     spyOn(component.cardClick, 'emit');
     component.onToggleFavorite(clickEvent);
-    
+
     expect(component.cardClick.emit).not.toHaveBeenCalled();
   });
 });

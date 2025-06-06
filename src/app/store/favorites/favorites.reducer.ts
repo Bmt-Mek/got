@@ -11,63 +11,66 @@ export interface FavoritesState {
 export const initialState: FavoritesState = {
   favorites: [],
   loading: false,
-  error: null
+  error: null,
 };
 
 export const favoritesReducer = createReducer(
   initialState,
-  on(FavoritesActions.loadFavorites, (state) => ({
+  on(FavoritesActions.loadFavorites, state => ({
     ...state,
     loading: true,
-    error: null
+    error: null,
   })),
   on(FavoritesActions.loadFavoritesSuccess, (state, { favorites }) => ({
     ...state,
     favorites,
     loading: false,
-    error: null
+    error: null,
   })),
   on(FavoritesActions.loadFavoritesFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    error,
   })),
-  on(FavoritesActions.addToFavorites, (state) => ({
+  on(FavoritesActions.addToFavorites, state => ({
     ...state,
     loading: true,
-    error: null
+    error: null,
   })),
   on(FavoritesActions.addToFavoritesSuccess, (state, { character }) => ({
     ...state,
     favorites: [...state.favorites, character],
     loading: false,
-    error: null
+    error: null,
   })),
   on(FavoritesActions.addToFavoritesFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    error,
   })),
-  on(FavoritesActions.removeFromFavorites, (state) => ({
+  on(FavoritesActions.removeFromFavorites, state => ({
     ...state,
     loading: true,
-    error: null
+    error: null,
   })),
-  on(FavoritesActions.removeFromFavoritesSuccess, (state, { characterUrl }) => ({
-    ...state,
-    favorites: state.favorites.filter(char => char.url !== characterUrl),
-    loading: false,
-    error: null
-  })),
+  on(
+    FavoritesActions.removeFromFavoritesSuccess,
+    (state, { characterUrl }) => ({
+      ...state,
+      favorites: state.favorites.filter(char => char.url !== characterUrl),
+      loading: false,
+      error: null,
+    })
+  ),
   on(FavoritesActions.removeFromFavoritesFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    error,
   })),
-  on(FavoritesActions.clearFavorites, (state) => ({
+  on(FavoritesActions.clearFavorites, state => ({
     ...state,
     favorites: [],
     loading: false,
-    error: null
+    error: null,
   }))
 );

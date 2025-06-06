@@ -26,12 +26,10 @@ bootstrapApplication(AppComponent, {
     provideStoreDevtools({
       maxAge: 25,
       logOnly: environment.production,
-      connectInZone: true
+      connectInZone: true,
     }),
     provideAnimations(),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
-    ),
-    importProvidersFrom(MatSnackBarModule)
-  ]
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    importProvidersFrom(MatSnackBarModule),
+  ],
 }).catch(err => console.error(err));

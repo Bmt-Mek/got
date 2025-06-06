@@ -11,18 +11,18 @@ import { Character } from '../../models';
 import { CharactersService } from '../../services';
 
 @Component({
-    selector: 'app-character-card',
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatTooltipModule,
-    ],
-    templateUrl: './character-card.component.html',
-    styleUrls: ['./character-card.component.scss']
+  selector: 'app-character-card',
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatTooltipModule,
+  ],
+  templateUrl: './character-card.component.html',
+  styleUrls: ['./character-card.component.scss'],
 })
 export class CharacterCardComponent {
   @Input() character!: Character;

@@ -1,5 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { User, LoginRequest, RegisterRequest, AuthResponse } from '../../models';
+import {
+  User,
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+} from '../../models';
 
 export const login = createAction(
   '[Auth] Login',
@@ -31,17 +36,11 @@ export const registerFailure = createAction(
   props<{ error: string }>()
 );
 
-export const logout = createAction(
-  '[Auth] Logout'
-);
+export const logout = createAction('[Auth] Logout');
 
-export const logoutSuccess = createAction(
-  '[Auth] Logout Success'
-);
+export const logoutSuccess = createAction('[Auth] Logout Success');
 
-export const checkAuthStatus = createAction(
-  '[Auth] Check Auth Status'
-);
+export const checkAuthStatus = createAction('[Auth] Check Auth Status');
 
 export const checkAuthStatusSuccess = createAction(
   '[Auth] Check Auth Status Success',
@@ -52,6 +51,4 @@ export const checkAuthStatusFailure = createAction(
   '[Auth] Check Auth Status Failure'
 );
 
-export const clearAuthError = createAction(
-  '[Auth] Clear Auth Error'
-);
+export const clearAuthError = createAction('[Auth] Clear Auth Error');

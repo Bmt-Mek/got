@@ -1,9 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Character } from '../../models';
 
-export const loadFavorites = createAction(
-  '[Favorites] Load Favorites'
-);
+export const loadFavorites = createAction('[Favorites] Load Favorites');
 
 export const loadFavoritesSuccess = createAction(
   '[Favorites] Load Favorites Success',
@@ -45,6 +43,4 @@ export const removeFromFavoritesFailure = createAction(
   props<{ error: string }>()
 );
 
-export const clearFavorites = createAction(
-  '[Favorites] Clear Favorites'
-);
+export const clearFavorites = createAction('[Favorites] Clear Favorites');

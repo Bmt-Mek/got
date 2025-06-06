@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { CharactersService } from './characters.service';
 import { Character, CharacterSearchParams } from '../models';
 import { environment } from '../../environments/environment';
@@ -15,7 +18,7 @@ describe('CharactersService', () => {
     culture: 'Northmen',
     born: 'In 283 AC',
     died: '',
-    titles: ['Lord Commander of the Night\'s Watch', 'King in the North'],
+    titles: ["Lord Commander of the Night's Watch", 'King in the North'],
     aliases: ['Lord Snow', 'The Bastard of Winterfell'],
     father: '',
     mother: '',
@@ -24,13 +27,13 @@ describe('CharactersService', () => {
     books: [],
     povBooks: ['https://anapioficeandfire.com/api/books/1'],
     tvSeries: ['Season 1', 'Season 2'],
-    playedBy: ['Kit Harington']
+    playedBy: ['Kit Harington'],
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [CharactersService]
+      providers: [CharactersService],
     });
     service = TestBed.inject(CharactersService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -56,8 +59,10 @@ describe('CharactersService', () => {
 
       const req = httpMock.expectOne(expectedUrl);
       expect(req.request.method).toBe('GET');
-      req.flush(mockResponse, { 
-        headers: { 'Link': '<https://anapioficeandfire.com/api/characters?page=2>; rel="next", <https://anapioficeandfire.com/api/characters?page=10>; rel="last"' }
+      req.flush(mockResponse, {
+        headers: {
+          Link: '<https://anapioficeandfire.com/api/characters?page=2>; rel="next", <https://anapioficeandfire.com/api/characters?page=10>; rel="last"',
+        },
       });
     });
 
@@ -76,16 +81,17 @@ describe('CharactersService', () => {
       const searchParams: CharacterSearchParams = {
         name: 'Jon',
         gender: 'Male',
-        culture: 'Northmen'
+        culture: 'Northmen',
       };
 
       service.getCharacters(1, searchParams).subscribe();
 
-      const req = httpMock.expectOne(request => 
-        request.url.includes('/characters') && 
-        request.params.get('name') === 'Jon' &&
-        request.params.get('gender') === 'Male' &&
-        request.params.get('culture') === 'Northmen'
+      const req = httpMock.expectOne(
+        request =>
+          request.url.includes('/characters') &&
+          request.params.get('name') === 'Jon' &&
+          request.params.get('gender') === 'Male' &&
+          request.params.get('culture') === 'Northmen'
       );
       expect(req.request.method).toBe('GET');
       req.flush([mockCharacter]);
@@ -97,7 +103,9 @@ describe('CharactersService', () => {
         expect(response.total).toBe(0);
       });
 
-      const req = httpMock.expectOne(request => request.url.includes('/characters'));
+      const req = httpMock.expectOne(request =>
+        request.url.includes('/characters')
+      );
       req.error(new ErrorEvent('Network error'));
     });
   });
@@ -120,12 +128,14 @@ describe('CharactersService', () => {
       const characterId = '999';
 
       service.getCharacterById(characterId).subscribe({
-        error: (error) => {
+        error: error => {
           expect(error).toBeTruthy();
-        }
+        },
       });
 
-      const req = httpMock.expectOne(`${environment.apiUrl}/characters/${characterId}`);
+      const req = httpMock.expectOne(
+        `${environment.apiUrl}/characters/${characterId}`
+      );
       req.error(new ErrorEvent('Not found'), { status: 404 });
     });
   });
@@ -138,9 +148,10 @@ describe('CharactersService', () => {
         expect(response.data).toEqual([mockCharacter]);
       });
 
-      const req = httpMock.expectOne(request => 
-        request.url.includes('/characters') && 
-        request.params.get('name') === searchTerm
+      const req = httpMock.expectOne(
+        request =>
+          request.url.includes('/characters') &&
+          request.params.get('name') === searchTerm
       );
       req.flush([mockCharacter]);
     });
@@ -180,15 +191,18 @@ describe('CharactersService', () => {
 
   describe('extractTotalFromLinkHeader', () => {
     it('should extract total from link header', () => {
-      const linkHeader = '<https://anapioficeandfire.com/api/characters?page=2>; rel="next", <https://anapioficeandfire.com/api/characters?page=10>; rel="last"';
-      
+      const linkHeader =
+        '<https://anapioficeandfire.com/api/characters?page=2>; rel="next", <https://anapioficeandfire.com/api/characters?page=10>; rel="last"';
+
       // Test through the getCharacters method since extractTotalFromLinkHeader is private
       service.getCharacters().subscribe(response => {
         expect(response.total).toBe(100); // 10 pages * 10 items per page
       });
 
-      const req = httpMock.expectOne(request => request.url.includes('/characters'));
-      req.flush([mockCharacter], { headers: { 'Link': linkHeader } });
+      const req = httpMock.expectOne(request =>
+        request.url.includes('/characters')
+      );
+      req.flush([mockCharacter], { headers: { Link: linkHeader } });
     });
 
     it('should handle missing link header', () => {
@@ -196,7 +210,9 @@ describe('CharactersService', () => {
         expect(response.total).toBe(1); // Fallback to data length
       });
 
-      const req = httpMock.expectOne(request => request.url.includes('/characters'));
+      const req = httpMock.expectOne(request =>
+        request.url.includes('/characters')
+      );
       req.flush([mockCharacter]);
     });
   });

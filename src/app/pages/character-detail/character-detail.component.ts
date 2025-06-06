@@ -73,9 +73,7 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
     this.error$ = this.store.select(selectCharactersError);
     this.isFavorite$ = this.character$.pipe(
       filter(character => !!character),
-      switchMap(character =>
-        this.store.select(selectIsFavorite(character.url))
-      )
+      switchMap(character => this.store.select(selectIsFavorite(character.url)))
     );
   }
 

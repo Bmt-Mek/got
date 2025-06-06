@@ -5,5 +5,5 @@ export const environment = {
   appName: 'Game of Thrones Character Explorer',
   itemsPerPage: 10,
   enableLogging: true,
-  enableDevtools: true
+  enableDevtools: true,
 };

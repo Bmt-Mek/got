@@ -15,49 +15,57 @@ export const initialState: AuthState = {
   token: null,
   isAuthenticated: false,
   isLoading: false,
-  error: null
+  error: null,
 };
 
 export const authReducer = createReducer(
   initialState,
-  on(AuthActions.login, AuthActions.register, (state) => ({
+  on(AuthActions.login, AuthActions.register, state => ({
     ...state,
     isLoading: true,
-    error: null
+    error: null,
   })),
-  on(AuthActions.loginSuccess, AuthActions.registerSuccess, (state, { authResponse }) => ({
-    ...state,
-    user: authResponse.user,
-    token: authResponse.token,
-    isAuthenticated: true,
-    isLoading: false,
-    error: null
-  })),
-  on(AuthActions.loginFailure, AuthActions.registerFailure, (state, { error }) => ({
-    ...state,
-    isLoading: false,
-    error
-  })),
+  on(
+    AuthActions.loginSuccess,
+    AuthActions.registerSuccess,
+    (state, { authResponse }) => ({
+      ...state,
+      user: authResponse.user,
+      token: authResponse.token,
+      isAuthenticated: true,
+      isLoading: false,
+      error: null,
+    })
+  ),
+  on(
+    AuthActions.loginFailure,
+    AuthActions.registerFailure,
+    (state, { error }) => ({
+      ...state,
+      isLoading: false,
+      error,
+    })
+  ),
   on(AuthActions.logout, AuthActions.logoutSuccess, () => ({
-    ...initialState
+    ...initialState,
   })),
-  on(AuthActions.checkAuthStatus, (state) => ({
+  on(AuthActions.checkAuthStatus, state => ({
     ...state,
-    isLoading: true
+    isLoading: true,
   })),
   on(AuthActions.checkAuthStatusSuccess, (state, { user }) => ({
     ...state,
     user,
     isAuthenticated: true,
-    isLoading: false
+    isLoading: false,
   })),
-  on(AuthActions.checkAuthStatusFailure, (state) => ({
+  on(AuthActions.checkAuthStatusFailure, state => ({
     ...state,
     isLoading: false,
-    isAuthenticated: false
+    isAuthenticated: false,
   })),
-  on(AuthActions.clearAuthError, (state) => ({
+  on(AuthActions.clearAuthError, state => ({
     ...state,
-    error: null
+    error: null,
   }))
 );

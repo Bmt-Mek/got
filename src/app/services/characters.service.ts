@@ -6,14 +6,17 @@ import { Character, CharacterSearchParams, PaginatedResponse } from '../models';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CharactersService {
   private readonly baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  getCharacters(page: number = 1, searchParams?: CharacterSearchParams): Observable<PaginatedResponse<Character>> {
+  getCharacters(
+    page: number = 1,
+    searchParams?: CharacterSearchParams
+  ): Observable<PaginatedResponse<Character>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', environment.itemsPerPage.toString());
@@ -39,36 +42,39 @@ export class CharactersService {
       }
     }
 
-    return this.http.get<Character[]>(`${this.baseUrl}/characters`, { 
-      params,
-      observe: 'response'
-    }).pipe(
-      map(response => {
-        const characters = response.body || [];
-        const linkHeader = response.headers.get('Link');
-        const total = this.extractTotalFromLinkHeader(linkHeader) || characters.length;
-        
-        return {
-          data: characters,
-          total,
-          page,
-          pageSize: environment.itemsPerPage,
-          hasNext: page * environment.itemsPerPage < total,
-          hasPrev: page > 1
-        };
-      }),
-      catchError(error => {
-        console.error('Error fetching characters:', error);
-        return of({
-          data: [],
-          total: 0,
-          page,
-          pageSize: environment.itemsPerPage,
-          hasNext: false,
-          hasPrev: false
-        });
+    return this.http
+      .get<Character[]>(`${this.baseUrl}/characters`, {
+        params,
+        observe: 'response',
       })
-    );
+      .pipe(
+        map(response => {
+          const characters = response.body || [];
+          const linkHeader = response.headers.get('Link');
+          const total =
+            this.extractTotalFromLinkHeader(linkHeader) || characters.length;
+
+          return {
+            data: characters,
+            total,
+            page,
+            pageSize: environment.itemsPerPage,
+            hasNext: page * environment.itemsPerPage < total,
+            hasPrev: page > 1,
+          };
+        }),
+        catchError(error => {
+          console.error('Error fetching characters:', error);
+          return of({
+            data: [],
+            total: 0,
+            page,
+            pageSize: environment.itemsPerPage,
+            hasNext: false,
+            hasPrev: false,
+          });
+        })
+      );
   }
 
   getCharacterById(id: string): Observable<Character> {
@@ -80,23 +86,25 @@ export class CharactersService {
     );
   }
 
-  searchCharacters(searchTerm: string): Observable<PaginatedResponse<Character>> {
+  searchCharacters(
+    searchTerm: string
+  ): Observable<PaginatedResponse<Character>> {
     const searchParams: CharacterSearchParams = {
-      name: searchTerm
+      name: searchTerm,
     };
     return this.getCharacters(1, searchParams);
   }
 
   private extractTotalFromLinkHeader(linkHeader: string | null): number | null {
     if (!linkHeader) return null;
-    
+
     // Parse Link header to extract total count
     const lastMatch = linkHeader.match(/page=(\d+)[^>]*>;\s*rel="last"/);
     if (lastMatch) {
       const lastPage = parseInt(lastMatch[1], 10);
       return lastPage * environment.itemsPerPage;
     }
-    
+
     return null;
   }
 
@@ -111,14 +119,14 @@ export class CharactersService {
     if (character.name && character.name.trim()) {
       return character.name;
     }
-    
+
     if (character.aliases && character.aliases.length > 0) {
       const validAlias = character.aliases.find(alias => alias && alias.trim());
       if (validAlias) {
         return validAlias;
       }
     }
-    
+
     return 'Unknown Character';
   }
 
