@@ -1,0 +1,124 @@
+name: CI/CD Development Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: '22.15'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: bmt-mek
+
+jobs:
+  # Code Quality and Security
+  lint-and-security:
+    name: Lint & Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npm run format:check
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Unit Tests
+  # unit-tests:
+  #   name: Unit Tests
+  #   runs-on: ubuntu-latest
+  #   needs: [lint-and-security]
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+
+  #     - name: Install dependencies
+  #       run: npm ci --legacy-peer-deps
+
+  #     - name: Run unit tests
+  #       run: npm run test:coverage
+
+  #     - name: Upload coverage reports
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         file: ./coverage/got/lcov.info
+  #         flags: unittests
+  #         name: codecov-umbrella
+
+  #     - name: Archive test results
+  #       uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: unit-test-results
+  #         path: |
+  #           coverage/
+  #           karma-results.xml
+
+  deploy-development:
+    name: Deployment
+    runs-on: ubuntu-latest
+    needs: [lint-and-security]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Angular application
+        run: npm run build:prod
+
+      - name: Copy index.html to 404.html for SPA routing support
+        run: cp dist/got/browser/index.html dist/got/browser/404.html
+
+      - name: Deploy
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/got/browser
+          enable_jekyll: true
