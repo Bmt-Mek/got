@@ -29,7 +29,6 @@ import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-
 
 @Component({
   selector: 'app-favorites',
-  standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -39,7 +38,6 @@ import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-
     MatCardModule,
     LoadingSpinnerComponent,
     CharacterCardComponent,
-    ConfirmDialogComponent,
   ],
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.scss'],

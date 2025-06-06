@@ -22,7 +22,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/got-character-explorer'),
+      dir: require('path').join(__dirname, './coverage/got'),
       subdir: '.',
       reporters: [
         { type: 'html' },

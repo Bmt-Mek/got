@@ -9,17 +9,16 @@ import { Store } from '@ngrx/store';
 import { AppState, selectIsAuthenticated } from '@app/store';
 
 @Component({
-  selector: 'app-landing',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-  ],
-  templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss'],
+    selector: 'app-landing',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+    ],
+    templateUrl: './landing.component.html',
+    styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
   isAuthenticated$: Observable<boolean>;

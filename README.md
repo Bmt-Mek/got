@@ -1,7 +1,7 @@
 # Game of Thrones Character Explorer
 
-[![CI/CD Pipeline](https://github.com/username/got-character-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/username/got-character-explorer/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/username/got-character-explorer/branch/main/graph/badge.svg)](https://codecov.io/gh/username/got-character-explorer)
+[![CI/CD Pipeline](https://github.com/Bmt-Mek/got/actions/workflows/ci.yml/badge.svg)](https://github.com/Bmt-Mek/got/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Bmt-Mek/got/branch/main/graph/badge.svg)](https://codecov.io/gh/Bmt-Mek/got)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A modern, responsive Single Page Application (SPA) built with Angular that allows users to explore Game of Thrones characters, houses, and manage their personal favorites collection. Features include advanced search, mobile-first design, authentication, and real-time data from the Ice and Fire API.
@@ -10,8 +10,8 @@ A modern, responsive Single Page Application (SPA) built with Angular that allow
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/username/got-character-explorer.git
-   cd got-character-explorer
+   git clone https://github.com/Bmt-Mek/got.git
+   cd got
    ```
 
 2. **Install dependencies:**
@@ -56,7 +56,7 @@ A modern, responsive Single Page Application (SPA) built with Angular that allow
 ## Technology Stack
 
 ### Frontend
-- **Angular 17** - Modern web framework with standalone components
+- **Angular 20** - Modern web framework with standalone components
 - **TypeScript** - Type-safe JavaScript with enhanced developer experience
 - **Angular Material** - Material Design components for consistent UI
 - **NgRx** - Reactive state management with effects and selectors
@@ -87,7 +87,7 @@ A modern, responsive Single Page Application (SPA) built with Angular that allow
 
 ### Project Structure
 ```
-got-character-explorer/
+got/
 ├── src/
 │   ├── app/
 │   │   ├── components/          # Reusable UI components

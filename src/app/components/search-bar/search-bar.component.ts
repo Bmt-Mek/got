@@ -20,20 +20,19 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CharacterSearchParams } from '../../models';
 
 @Component({
-  selector: 'app-search-bar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatExpansionModule,
-  ],
-  templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.scss'],
+    selector: 'app-search-bar',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatExpansionModule,
+    ],
+    templateUrl: './search-bar.component.html',
+    styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
   @Input() initialSearchParams?: CharacterSearchParams | null;

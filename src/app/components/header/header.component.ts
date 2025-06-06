@@ -19,20 +19,19 @@ import {
 import { logout } from '../../store/auth/auth.actions';
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatMenuModule,
-    MatDividerModule,
-  ],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+    selector: 'app-header',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatBadgeModule,
+        MatMenuModule,
+        MatDividerModule,
+    ],
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
   favoritesCount$: Observable<number>;

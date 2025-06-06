@@ -38,21 +38,20 @@ import { CharactersService } from '../../services';
 import { LoadingSpinnerComponent } from '../../components/loading-spinner/loading-spinner.component';
 
 @Component({
-  selector: 'app-character-detail',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatSnackBarModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-  ],
-  templateUrl: './character-detail.component.html',
-  styleUrls: ['./character-detail.component.scss'],
+    selector: 'app-character-detail',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        MatChipsModule,
+        MatDividerModule,
+        MatSnackBarModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+    ],
+    templateUrl: './character-detail.component.html',
+    styleUrls: ['./character-detail.component.scss']
 })
 export class CharacterDetailComponent implements OnInit, OnDestroy {
   character$: Observable<Character | null>;

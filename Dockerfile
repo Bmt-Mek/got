@@ -23,7 +23,7 @@ FROM nginx:alpine AS production
 RUN apk add --no-cache curl
 
 # Copy built application from builder stage
-COPY --from=builder /app/dist/got-character-explorer /usr/share/nginx/html
+COPY --from=builder /app/dist/got /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf

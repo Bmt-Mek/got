@@ -6,17 +6,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-pagination',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatFormFieldModule,
-  ],
-  templateUrl: './pagination.component.html',
-  styleUrls: ['./pagination.component.scss'],
+    selector: 'app-pagination',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatFormFieldModule,
+    ],
+    templateUrl: './pagination.component.html',
+    styleUrls: ['./pagination.component.scss']
 })
 export class PaginationComponent {
   @Input() currentPage: number = 1;

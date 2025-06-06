@@ -41,22 +41,21 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
-  selector: 'app-characters-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSnackBarModule,
-    MatBadgeModule,
-    MatTooltipModule,
-    LoadingSpinnerComponent,
-    CharacterCardComponent,
-    SearchBarComponent,
-    PaginationComponent,
-  ],
-  templateUrl: './characters-list.component.html',
-  styleUrls: ['./characters-list.component.scss'],
+    selector: 'app-characters-list',
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSnackBarModule,
+        MatBadgeModule,
+        MatTooltipModule,
+        LoadingSpinnerComponent,
+        CharacterCardComponent,
+        SearchBarComponent,
+        PaginationComponent,
+    ],
+    templateUrl: './characters-list.component.html',
+    styleUrls: ['./characters-list.component.scss']
 })
 export class CharactersListComponent implements OnInit, OnDestroy {
   characters$: Observable<Character[]>;

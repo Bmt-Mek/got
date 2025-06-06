@@ -2,18 +2,19 @@
 @use '@angular/material' as mat;
 
 /* Custom Theme Colors */
-$primary: mat.define-palette(mat.$indigo-palette, 700);
-$accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
-$warn: mat.define-palette(mat.$red-palette);
+$primary: mat.m2-define-palette(mat.$m2-indigo-palette, 700);
+$accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
+$warn: mat.m2-define-palette(mat.$m2-red-palette);
 
-$theme: mat.define-light-theme((
+$theme: mat.m2-define-light-theme((
   color: (
     primary: $primary,
     accent: $accent,
     warn: $warn,
   )
 ));
-@include mat.core-theme($theme);
+@include mat.elevation-classes();
+@include mat.app-background();
 
 /* Mobile-First Responsive Design */
 * {
@@ -194,9 +195,9 @@ h3 {
 .font-bold { font-weight: 700; }
 
 /* Color Utilities */
-.text-primary { color: mat.get-color-from-palette($primary); }
-.text-accent { color: mat.get-color-from-palette($accent); }
-.text-warn { color: mat.get-color-from-palette($warn); }
+.text-primary { color: mat.m2-get-color-from-palette($primary); }
+.text-accent { color: mat.m2-get-color-from-palette($accent); }
+.text-warn { color: mat.m2-get-color-from-palette($warn); }
 .text-muted { color: #757575; }
 
 /* Visibility Utilities */
@@ -241,7 +242,7 @@ h3 {
   min-height: 200px;
   flex-direction: column;
   text-align: center;
-  color: mat.get-color-from-palette($warn);
+  color: mat.m2-get-color-from-palette($warn);
 }
 
 .search-container {
@@ -328,7 +329,7 @@ h3 {
 .mat-raised-button:focus,
 .mat-flat-button:focus,
 .mat-stroked-button:focus {
-  outline: 2px solid mat.get-color-from-palette($accent);
+  outline: 2px solid mat.m2-get-color-from-palette($accent);
   outline-offset: 2px;
 }
 

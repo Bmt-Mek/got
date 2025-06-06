@@ -77,7 +77,7 @@ jobs:
   #     - name: Upload coverage reports
   #       uses: codecov/codecov-action@v3
   #       with:
-  #         file: ./coverage/got-character-explorer/lcov.info
+  #         file: ./coverage/got/lcov.info
   #         flags: unittests
   #         name: codecov-umbrella
 
