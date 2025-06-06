@@ -3,7 +3,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
-
+const helmet = require('helmet');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'got-explorer-secret-key';
@@ -11,8 +11,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'got-explorer-secret-key';
 // Middleware
 app.use(
   cors({
-    origin: ['http://localhost:4200', 'https://bmt-mek.github.io/got'],
+    origin: ['http://localhost:4200', 'https://bmt-mek.github.io'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  })
+);
+app.use(
+  helmet({
+    xFrameOptions: { action: 'deny' },
   })
 );
 app.use(express.json());
