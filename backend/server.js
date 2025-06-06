@@ -9,7 +9,12 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'got-explorer-secret-key';
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:4200', 'https://bmt-mek.github.io/got'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  })
+);
 app.use(express.json());
 
 // In-memory storage (replace with database in production)
@@ -23,20 +28,20 @@ const demoUser = {
   email: 'demo@got-explorer.com',
   firstName: 'Demo',
   lastName: 'User',
-  createdAt: new Date()
+  createdAt: new Date(),
 };
 users.set('demo@got-explorer.com', {
   ...demoUser,
-  password: bcrypt.hashSync('demo123', 10)
+  password: bcrypt.hashSync('demo123', 10),
 });
 userFavorites.set(demoUserId, []);
 
 // Utility functions
-const generateToken = (userId) => {
+const generateToken = userId => {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
-const verifyToken = (token) => {
+const verifyToken = token => {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
@@ -64,11 +69,11 @@ const authenticateToken = (req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     users: users.size,
-    favorites: userFavorites.size
+    favorites: userFavorites.size,
   });
 });
 
@@ -83,12 +88,16 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+      return res
+        .status(400)
+        .json({ message: 'Password must be at least 6 characters' });
     }
 
     // Check if user already exists
     if (users.has(email)) {
-      return res.status(409).json({ message: 'User already exists with this email' });
+      return res
+        .status(409)
+        .json({ message: 'User already exists with this email' });
     }
 
     // Hash password
@@ -101,7 +110,7 @@ app.post('/api/auth/register', async (req, res) => {
       email,
       firstName,
       lastName,
-      createdAt: new Date()
+      createdAt: new Date(),
     };
 
     // Store user
@@ -114,7 +123,7 @@ app.post('/api/auth/register', async (req, res) => {
     res.status(201).json({
       user,
       token,
-      expiresIn: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+      expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     });
   } catch (error) {
     console.error('Registration error:', error);
@@ -128,7 +137,9 @@ app.post('/api/auth/login', async (req, res) => {
 
     // Validation
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return res
+        .status(400)
+        .json({ message: 'Email and password are required' });
     }
 
     // Find user
@@ -152,7 +163,7 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({
       user,
       token,
-      expiresIn: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+      expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -164,7 +175,7 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
   try {
     // Find user by ID
     const user = Array.from(users.values()).find(u => u.id === req.userId);
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -192,17 +203,19 @@ app.get('/api/favorites', authenticateToken, (req, res) => {
 app.post('/api/favorites', authenticateToken, (req, res) => {
   try {
     const character = req.body;
-    
+
     if (!character || !character.url) {
       return res.status(400).json({ message: 'Invalid character data' });
     }
 
     const favorites = userFavorites.get(req.userId) || [];
-    
+
     // Check if character is already in favorites
     const isAlreadyFavorite = favorites.some(fav => fav.url === character.url);
     if (isAlreadyFavorite) {
-      return res.status(409).json({ message: 'Character already in favorites' });
+      return res
+        .status(409)
+        .json({ message: 'Character already in favorites' });
     }
 
     // Add to favorites
@@ -220,7 +233,7 @@ app.delete('/api/favorites/:characterUrl', authenticateToken, (req, res) => {
   try {
     const characterUrl = decodeURIComponent(req.params.characterUrl);
     const favorites = userFavorites.get(req.userId) || [];
-    
+
     // Remove character from favorites
     const updatedFavorites = favorites.filter(fav => fav.url !== characterUrl);
     userFavorites.set(req.userId, updatedFavorites);
